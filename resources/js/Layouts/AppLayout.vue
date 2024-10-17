@@ -56,12 +56,12 @@
                                     <!-- Authentication -->
                                     <div class="py-1 border-t border-gray-200 dark:border-gray-700">
                                         <button
-                                            type="button"
-                                            @click="logout"
-                                            class="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                                        >
-                                            Log Out
-                                        </button>
+    type="button"
+    @click.stop="logout"
+    class="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-700 transition-colors duration-200"
+>
+    Log Out
+</button>
                                     </div>
                                 </template>
                             </Dropdown>
@@ -71,6 +71,8 @@
             </div>
         </nav>
 
+       
+
         <!-- Page Content -->
         <main>
             <slot />
@@ -79,19 +81,28 @@
 </template>
 
 <script setup>
-import { usePage, router } from '@inertiajs/vue3';
+import { ref } from 'vue'; 
+import { usePage } from '@inertiajs/vue3';
+import { Inertia } from '@inertiajs/inertia';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import { Link } from '@inertiajs/vue3';
 
-// Access authentication and registration data from Inertia props
-const { props } = usePage();
-const auth = props.auth;
-const canRegister = props.canRegister;
 
-// Logout function
-const logout = () => {
-    router.post('/logout');
+const { auth, canRegister } = usePage().props;
+
+
+const isLoggingOut = ref(false);
+
+const logout = async () => {
+    isLoggingOut.value = true;
+    try {
+        await Inertia.post('/logout'); 
+    } catch (error) {
+        // Optionally, display a user-friendly error message
+    } finally {
+        isLoggingOut.value = false;
+    }
 };
 </script>
 

@@ -24,6 +24,10 @@ Route::get('/', function () {
     ]);
 });
 
+Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
+    ->middleware('auth')
+    ->name('logout');
+
 
 
 // Dashboard - Accessible Only to Authenticated Users
